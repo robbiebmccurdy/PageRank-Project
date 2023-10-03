@@ -1,4 +1,5 @@
 import sys
+import pandas as pd
 
 if len(sys.argv) != 3:
 	print("Incorrect amount of arguments. Please only input the program name, the node.csv, and edge.csv file in the command line argument when calling this program.")
@@ -15,18 +16,12 @@ elif "edge" not in sys.argv[2]:
 else:
 	print("File checks passed. Starting program...")
 
-print("\nFirst File: ")
-print(sys.argv[1])
-print("\nSecond File: ")
-print(sys.argv[2])
+nodeFile = pd.read_csv(sys.argv[1])
+edgeFile = pd.read_csv(sys.argv[2])
 
-nodeFile = open(sys.argv[1], "r")
-edgeFile = open(sys.argv[2], "r")
+nodes = len(nodeFile)
 
-print("Node file: \n")
-print(nodeFile.read())
-print("\nEdge file: \n")
-print(edgeFile.read())
+print("\nNodes: ", nodes)
 
 print("\nSuccessfully read files.")
 print("\nQuitting program...")
