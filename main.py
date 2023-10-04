@@ -24,6 +24,8 @@ def dampMatrix(nNodes, matrixA, dampValue):
 	    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
 	    np.savetxt(file, matrixM, delimiter=",", fmt="%.2f")
 
+	return matrixM
+
 def simplePageRank(nodesFile, edgesArray, d, max_iterations):
 	# Grabbing amount of nodes
 	nodes = len(nodesFile)
@@ -55,6 +57,16 @@ def simplePageRank(nodesFile, edgesArray, d, max_iterations):
 		rankVector = newRankVector
 
 	return rankVector
+
+def computeEigen(matrix):
+	# Compute the eigenvalues and eigenvectors
+	eigenValues, eigenVectors = np.linalg.eig(matrix)
+
+	# Find index of eigenvalue closest to 1
+	idx = np.abs(eigenValues - 1).argmin()
+
+	# Return the corresponding eigenvector
+	return eigenVectors[:, idx]
 
 # Checking to see if the command line arguements to call the program are correct, if not we will break the program and give an error message
 
@@ -134,75 +146,13 @@ print("\nPart 1, Section A finished...")
 
 print("\nPart 1, Section B starting...\n")
 
-dampMatrix(nodes, linkMatrix, dFile)
+mMatrix = dampMatrix(nodes, linkMatrix, dFile)
 
 print("\nPart 1, Section B finished...\n")
 
 # PART 2
 
 # SECTION A
-
-"""
-
-with open('pagerankiterations.csv', 'w', newline='') as file:
-    # Write the number of nodes at the beginning of the file
-    file.write("Iteration 0\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 0)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 1\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 1)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 2\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 2)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 4\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 4)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 8\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 8)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 16\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 16)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 32\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 32)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-    file.write("Iteration 50\n")
-
-    page_rank = simplePageRank(nodeFile, edgeArray, dFile, 50)
-
-    # Use np.savetxt to append the matrix below the number of nodes, formatted to two decimal places
-    np.savetxt(file, page_rank, delimiter=",", fmt="%.2f")
-
-"""
 
 iterations_list = [0, 1, 2, 4, 8, 16, 32, 50]
 
@@ -215,7 +165,35 @@ with open("pagerankiterations.csv", "w") as f:
         f.write(str([round(rank, 3) for rank in rankVector]))
         f.write("\n\n")  # Adding extra newlines for separation
 
-print("\nFinished printing page ranks...\n")
+print("\nPart 2, Section A finished...\n")
+
+# PART 3
+
+# SECTION A
+
+eigenA = computeEigen(linkMatrix)
+
+eigenM = computeEigen(mMatrix)
+
+print("Eigenvector for A corresponding to eigenvalue 1:")
+formatted_vector = ", ".join(["{:.6f}".format(val) for val in eigenA])  # Adjust the number of decimal places as needed
+print(formatted_vector)
+
+print("Eigenvector for M corresponding to eigenvalue 1:")
+formatted_vector = ", ".join(["{:.6f}".format(val) for val in eigenM])  # Adjust the number of decimal places as needed
+print(formatted_vector)
+
+# Write eigenvector for A
+with open('eigenvectors.csv', 'a') as file:
+    file.write("Eigenvector for A corresponding to eigenvalue 1:\n")
+    formatted_vector_A = ", ".join(["{:.6f}".format(val) for val in eigenA])
+    file.write(formatted_vector_A + "\n\n")
+
+# Write eigenvector for M
+with open('eigenvectors.csv', 'a') as file:
+    file.write("Eigenvector for M corresponding to eigenvalue 1:\n")
+    formatted_vector_M = ", ".join(["{:.6f}".format(val) for val in eigenM])
+    file.write(formatted_vector_M + "\n\n")
 
 print("\nSuccessfully read files.")
 print("\nQuitting program...")
