@@ -122,14 +122,6 @@ col_sums = linkMatrix.sum(axis=0, keepdims=True)
 col_sums[col_sums == 0] = 1
 linkMatrix = linkMatrix / col_sums
 
-# Printing Link Matrix with the formatting requested
-
-print("\nLink Matrix: \n")
-print(nodes)
-for row in linkMatrix:
-    formatted_row = ", ".join(["{:.2f}".format(val) for val in row])
-    print(formatted_row)
-
 # Writing to linkmatrix.csv
 
 # Save to CSV with requested formatting
@@ -175,13 +167,8 @@ eigenA = computeEigen(linkMatrix)
 
 eigenM = computeEigen(mMatrix)
 
-print("Eigenvector for A corresponding to eigenvalue 1:")
-formatted_vector = ", ".join(["{:.6f}".format(val) for val in eigenA])  # Adjust the number of decimal places as needed
-print(formatted_vector)
-
-print("Eigenvector for M corresponding to eigenvalue 1:")
-formatted_vector = ", ".join(["{:.6f}".format(val) for val in eigenM])  # Adjust the number of decimal places as needed
-print(formatted_vector)
+with open('eigenvectors.csv', 'w') as file:
+	pass
 
 # Write eigenvector for A
 with open('eigenvectors.csv', 'a') as file:
