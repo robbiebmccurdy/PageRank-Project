@@ -54,6 +54,13 @@ def simplePageRank(nodesFile, edgesArray, d, max_iterations):
 
 			newRankVector[j] += d[0] * incomingSum
 
+		threshold = 1e-6
+
+		if np.linalg.norm(newRankVector - rankVector, ord=1) < threshold:
+			print(f"Converged in {i} iterations.")
+		else:
+			print("Did not converge.")
+
 		rankVector = newRankVector
 
 	return rankVector
